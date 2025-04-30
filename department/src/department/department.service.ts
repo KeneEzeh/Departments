@@ -1,4 +1,3 @@
-// department.service.ts
 import {
   BadRequestException,
   Injectable,
@@ -44,8 +43,6 @@ export class DepartmentService {
       } else {
         department.subDepartments = [];
       }
-      console.log('Creating department:', department);
-      console.log('Parent:', parent);
 
       return this.departmentRepo.save(department);
     } catch (error: unknown) {
@@ -54,6 +51,7 @@ export class DepartmentService {
       } else {
         console.error('Unknown error:', error);
       }
+      console.log(error);
       throw new InternalServerErrorException('Error creating Department');
     }
   }
@@ -64,7 +62,7 @@ export class DepartmentService {
     });
   }
 
-  async update(id: number, input: UpdateDepartmentInput): Promise<Department> {
+  async update(id: string, input: UpdateDepartmentInput): Promise<Department> {
     const department = await this.departmentRepo.findOne({
       where: { id },
       relations: ['subDepartments'],

@@ -1,12 +1,13 @@
 'use client';
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { CREATE_DEPARTMENT } from '@/graphql/mutations';
+import { CREATE_DEPARTMENT, UPDATE_DEPARTMENT } from '@/graphql/mutations';
 
-export default function DepartmentForm() {
+type Props = { mode: 'create' | 'update' };
+export default function DepartmentForm({mode}: Props) {
   const [name, setName] = useState('');
   const [subs, setSubs] = useState<string[]>([]);
-  const [createDepartment] = useMutation(CREATE_DEPARTMENT);
+  const [mutate] = useMutation( mode === 'create' ? CREATE_DEPARTMENT : UPDATE_DEPARTMENT);
 
   const handleAddSub = () => setSubs([...subs, '']);
   const handleSubChange = (value: string, index: number) => {
@@ -21,7 +22,7 @@ export default function DepartmentForm() {
       name,
       subDepartments: subs.filter(Boolean).map((s) => ({ name: s })),
     };
-    await createDepartment({ variables: { input } });
+    await mutate({ variables: { input } });
     setName('');
     setSubs([]);
   };

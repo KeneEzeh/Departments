@@ -1,5 +1,4 @@
-// department.entity.ts
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -11,9 +10,9 @@ import {
 @ObjectType()
 @Entity()
 export class Department {
-  @Field(() => Int)
-  @PrimaryGeneratedColumn()
-  id: number;
+  @Field(() => String)
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Field()
   @Column()

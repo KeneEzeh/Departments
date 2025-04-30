@@ -9,12 +9,12 @@ export const LOGIN = gql`
 `;
 
 export const SIGNUP = gql`
-  mutation Signup($email: String!, $password: String!) {
-    signup(input: {email: $email, password: $password}) {
-      accessToken
+  mutation Signup($email: String!, $password: String!, $username: String!) {
+    signup(input: {email: $email, password: $password, username: $username}) {
       user {
         id
-        email
+        email,
+        username
       }
     }
   }
@@ -23,6 +23,19 @@ export const SIGNUP = gql`
 export const CREATE_DEPARTMENT = gql`
   mutation CreateDepartment($input: CreateDepartmentInput!) {
     createDepartment(input: $input) {
+      id
+      name
+      subDepartments {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const UPDATE_DEPARTMENT = gql`
+  mutation UpdateDepartment($input: UpdateDepartmentInput!) {
+    updateDepartment(input: $input) {
       id
       name
       subDepartments {

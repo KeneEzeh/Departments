@@ -1,5 +1,5 @@
 import {
-  ConsoleLogger,
+  BadRequestException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -20,7 +20,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, userId: number): Promise<any> {
+  async validateUser(email: string, userId: string): Promise<any> {
     console.log(email, userId);
     const user = await this.usersService.findUserByEmail(email);
     if (!user) {
@@ -35,6 +35,12 @@ export class AuthService {
   }
 
   async signup(input: SignupInput): Promise<User> {
+    const existingUser = await this.userRepo.findOne({
+      where: { email: input.email },
+    });
+    if (existingUser) {
+      throw new BadRequestException('User with this email already exists');
+    }
     const hashedPassword = await bcrypt.hash(input.password, 10);
     const user = this.userRepo.create({ ...input, password: hashedPassword });
     return this.userRepo.save(user);

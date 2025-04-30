@@ -3,9 +3,9 @@
 # ------------------------------------------------------
 
 type User {
-  id: Int!
+  id: String!
   email: String!
-  name: String
+  username: String
 }
 
 type LoginResponse {
@@ -13,7 +13,7 @@ type LoginResponse {
 }
 
 type Department {
-  id: Int!
+  id: String!
   name: String!
   subDepartments: [Department!]
 }
@@ -26,14 +26,14 @@ type Mutation {
   signup(input: SignupInput!): User!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   createDepartment(input: CreateDepartmentInput!): Department!
-  updateDepartment(id: Int!, input: UpdateDepartmentInput!): Department!
+  updateDepartment(id: String!, input: UpdateDepartmentInput!): Department!
   deleteDepartment(id: Int!): Boolean!
 }
 
 input SignupInput {
   email: String!
   password: String!
-  name: String
+  username: String
 }
 
 input LoginUserInput {

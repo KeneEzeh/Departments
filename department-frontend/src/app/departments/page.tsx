@@ -7,7 +7,7 @@ import { LoadingOverlay } from '../../components/Loader';
 
 export default function DepartmentsPage() {
   const [page, setPage] = useState(1);
-  const { data, loading } = useQuery(GET_DEPARTMENTS, { variables: { page, limit: 5 } });
+  const { data, loading } = useQuery(GET_DEPARTMENTS);
     console.log(data);
 
   if (loading) return <LoadingOverlay />;
@@ -26,6 +26,7 @@ export default function DepartmentsPage() {
           Next
         </button>
       </div>
+
     </div>
   );
 }

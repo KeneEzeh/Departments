@@ -4,11 +4,12 @@ import { ApolloProvider, InMemoryCache, ApolloClient, HttpLink } from '@apollo/c
 import { ReactNode, useEffect, useState } from 'react';
 
 export function ApolloWrapper({ children }: { children: ReactNode }) {
-  const [client, setClient] = useState<ApolloClient<any> | null>(null);
+  const [client, setClient] = useState<ApolloClient<unknown> | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token') || '';
 
+    console.log('Token from localStorage:', token);
     const apolloClient = new ApolloClient({
       link: new HttpLink({
         uri: process.env.NEXT_PUBLIC_API_URL,

@@ -9,5 +9,5 @@ export class SignupInput {
   password: string;
 
   @Field({ nullable: true })
-  name?: string;
+  username?: string;
 }

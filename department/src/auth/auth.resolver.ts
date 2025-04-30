@@ -16,8 +16,10 @@ export class AuthResolver {
 
   @Mutation(() => LoginResponse)
   async login(@Args('loginUserInput') loginUserInput: LoginUserInput) {
-
-    console.log("Login...")
-    return this.authService.login(loginUserInput.email, loginUserInput.password);
+    console.log('Login...');
+    return this.authService.login(
+      loginUserInput.email,
+      loginUserInput.password,
+    );
   }
 }

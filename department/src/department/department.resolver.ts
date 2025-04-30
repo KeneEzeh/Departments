@@ -26,7 +26,7 @@ export class DepartmentResolver {
 
   @Mutation(() => Department)
   updateDepartment(
-    @Args('id', { type: () => Int }) id: number,
+    @Args('id', { type: () => String }) id: string,
     @Args('input') input: UpdateDepartmentInput,
   ): Promise<Department> {
     return this.departmentService.update(id, input);

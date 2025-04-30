@@ -1,4 +1,3 @@
-// sub-department.entity.ts
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Department } from './department.entity';
