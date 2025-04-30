@@ -36,7 +36,7 @@ export default function DepartmentsPage() {
       >Create Department</button>
 
       </div>
-      <h1>Click on any of the columns to update</h1>
+      <h1>Click on any department to update</h1>
       {data && data.getDepartments.length && <DepartmentTree departments={data?.getDepartments} />}
       <div className="mt-4 space-x-2">
         <button onClick={() => setPage((p) => Math.max(p - 1, 1))} className="bg-gray-200 px-3 py-1 rounded">
