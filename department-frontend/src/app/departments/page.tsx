@@ -39,12 +39,15 @@ export default function DepartmentsPage() {
         </button>
       </div>
   
-      <p className="text-gray-600 mb-4">Click on any department to update it.</p>
   
       {data?.getDepartments.length ? (
+        <div>
+          <p className="text-gray-600 mb-4">Click on any department to update it.</p>
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
           <DepartmentTree departments={data.getDepartments} />
         </div>
+        </div>
+          
       ) : (
         <p className="text-gray-500 italic">No departments found.</p>
       )}
