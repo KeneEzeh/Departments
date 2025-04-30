@@ -13,7 +13,7 @@ export default function DepartmentsPage() {
   console.log(page)
 
     useEffect(() => {
-      if (error?.graphQLErrors[0]?.message === 'Unauthorized') {
+      if (error?.graphQLErrors[0]?.message === 'Unauthorized' || error?.graphQLErrors[0]?.message === 'Invalid token') {
         alert('Please login to access this page');
         router.push('/auth/login');
       }
