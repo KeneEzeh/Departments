@@ -31,8 +31,8 @@ export const CREATE_DEPARTMENT = gql`
 `;
 
 export const UPDATE_DEPARTMENT = gql`
-  mutation UpdateDepartment($input: UpdateDepartmentInput!) {
-    updateDepartment(input: $input) {
+  mutation UpdateDepartment($id: String!, $input: UpdateDepartmentInput!) {
+    updateDepartment(id: $id, input: $input) {
       id
       name
       subDepartments {

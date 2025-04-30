@@ -2,12 +2,15 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_DEPARTMENT, UPDATE_DEPARTMENT } from '@/graphql/mutations';
+import { useRouter } from 'next/navigation';
 
-type Props = { mode: 'create' | 'update' };
-export default function DepartmentForm({mode}: Props) {
+type Props = { mode: 'create' | 'update', id?: string };
+export default function DepartmentForm({mode,id}: Props) {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [subs, setSubs] = useState<string[]>([]);
   const [mutate] = useMutation( mode === 'create' ? CREATE_DEPARTMENT : UPDATE_DEPARTMENT);
+  console.log(mode,id);
 
   const handleAddSub = () => setSubs([...subs, '']);
   const handleSubChange = (value: string, index: number) => {
@@ -22,14 +25,18 @@ export default function DepartmentForm({mode}: Props) {
       name,
       subDepartments: subs.filter(Boolean).map((s) => ({ name: s })),
     };
-    await mutate({ variables: { input } });
+    await mutate({ variables: mode === 'create' ? { input } : { id, input } });
+    console.log('Submitting form', input);
+    alert(`Department ${mode === 'create' ? "created" : 'updated'}created successfully`);
     setName('');
     setSubs([]);
+    router.push('/departments');
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <input className="border p-2 rounded w-full" value={name} onChange={(e) => setName(e.target.value)} placeholder="Department name" />
+      {mode === 'update' && <input className="border p-2 rounded w-full cursor-not-allowed" value={id} readOnly  placeholder="Department Id" />}
       <div>
         {subs.map((sub, i) => (
           <input
@@ -45,7 +52,7 @@ export default function DepartmentForm({mode}: Props) {
         </button>
       </div>
       <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
-        Create Department
+        {mode === 'create' ? 'Create Department' : 'Update Department'}
       </button>
     </form>
   );

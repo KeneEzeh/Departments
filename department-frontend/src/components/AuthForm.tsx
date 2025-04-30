@@ -16,10 +16,10 @@ export default function AuthForm({ mode }: Props) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      console.log('Submitting form', { email, password, username });
       const res = await auth({ variables: mode === 'login' ? { email, password } : { email, password, username } });
       if(mode === 'login') {
         localStorage.setItem('token', res.data.login.access_token);
+        console.log('Submitting form', res.data.login.access_token);
         router.push('/departments');
       } else {
         router.push('/auth/login');
@@ -65,10 +65,13 @@ export default function AuthForm({ mode }: Props) {
 <p className="text-center">
       {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}
       <button
-        className="text-blue-500 ml-2"
+        className="00 ml-2"
         onClick={() => mode === 'login' ? router.push('/auth/signup') : router.push('/auth/login')}
       >
-        Switch to {mode === 'login' ? 'Signup' : 'Login'} 
+        Switch to <span className='font-bold text-blue-500'>
+
+        {mode === 'login' ? 'Signup' : 'Login'} 
+        </span>
       </button>
     </p>
     </>
