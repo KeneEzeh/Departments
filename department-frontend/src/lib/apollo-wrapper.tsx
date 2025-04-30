@@ -11,10 +11,10 @@ export function ApolloWrapper({ children }: { children: ReactNode }) {
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    if (!token) {
-      router.push('/auth/login');
-      return;
-    }
+    // if (!token) {
+    //   router.push('/auth/login');
+    //   return;
+    // }
 
     const apolloClient = new ApolloClient({
       link: new HttpLink({
