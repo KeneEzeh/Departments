@@ -58,23 +58,42 @@ export class DepartmentService {
     }
   }
 
-  async findAll(): Promise<Department[]> {
+  async findAll({
+    page,
+    limit,
+  }: {
+    page: number;
+    limit: number;
+  }): Promise<Department[]> {
     return this.departmentRepo.find({
+      skip: (page - 1) * limit,
+      take: limit,
       relations: ['subDepartments', 'parent'],
     });
   }
 
   async update(id: number, input: UpdateDepartmentInput): Promise<Department> {
-    const department = await this.departmentRepo.findOne({ where: { id } });
+    const department = await this.departmentRepo.findOne({
+      where: { id },
+      relations: ['subDepartments'],
+    });
     if (!department) throw new Error('Department not found');
 
     department.name = input.name ?? department.name;
 
-    if (input.subDepartments) {
-      await this.subDepartmentRepo.delete({ department: { id } });
-      department.subDepartments = input.subDepartments.map((sub) =>
-        this.subDepartmentRepo.create({ name: sub.name }),
-      );
+    if (input.subDepartments?.length) {
+      for (const sub of input.subDepartments) {
+        const existingSubDepartment = department.subDepartments.find(
+          (subDep) => subDep.name === sub.name,
+        );
+        if (!existingSubDepartment) {
+          const newSubDepartment = await this.departmentRepo.save({
+            name: sub.name,
+            parent: department,
+          });
+          department.subDepartments.push(newSubDepartment);
+        }
+      }
     }
 
     return this.departmentRepo.save(department);

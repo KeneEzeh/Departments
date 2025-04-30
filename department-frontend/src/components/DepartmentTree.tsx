@@ -1,13 +1,24 @@
 'use client';
-export default function DepartmentTree({ departments }: { departments: any[] }) {
+
+interface Department {
+  id: string;
+  name: string;
+  subDepartments?: SubDepartment[];
+}
+
+interface SubDepartment {
+  id: string;
+  name: string;
+}
+export default function DepartmentTree({ departments }: { departments: Department[] }) {
   return (
     <ul className="space-y-2">
-      {departments.map((d) => (
+      {departments.map((d: Department) => (
         <li key={d.id}>
           <div className="font-semibold">{d.name}</div>
-          {d.subDepartments?.length > 0 && (
+          {d.subDepartments && d.subDepartments.length > 0 && (
             <ul className="ml-4 list-disc">
-              {d.subDepartments.map((s: any) => (
+              {d.subDepartments.map((s: SubDepartment) => (
                 <li key={s.id}>{s.name}</li>
               ))}
             </ul>

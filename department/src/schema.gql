@@ -19,7 +19,7 @@ type Department {
 }
 
 type Query {
-  getDepartments: [Department!]!
+  getDepartments(page: Int!, limit: Int!): [Department!]!
 }
 
 type Mutation {

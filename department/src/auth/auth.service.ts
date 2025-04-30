@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConsoleLogger,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { SignupInput } from './dto/sign-up.dto';
@@ -37,9 +41,8 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    const user = await this.userRepo.findOne({
-      where: { email },
-    });
+    const user = await this.usersService.findUserByEmail(email);
+    console.log(email, password);
 
     if (!user) {
       throw new UnauthorizedException('Invalid email.');

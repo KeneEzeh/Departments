@@ -12,14 +12,17 @@ export default function AuthForm({ mode }: Props) {
   const [auth] = useMutation(mode === 'login' ? LOGIN : SIGNUP);
   const router = useRouter();
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       console.log('Submitting form', { email, password });
       console.log('Auth mutation', auth);
       await auth({ variables: { email, password } });
       router.push('/departments');
-    } catch (err) {
+    } catch (err: unknown) {
+    if (err instanceof Error) {
+        console.error('Authentication error:', err.message);
+      }
       alert('Authentication failed');
     }
   };

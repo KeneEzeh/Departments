@@ -19,9 +19,12 @@ export class DepartmentResolver {
   }
 
   @Query(() => [Department])
-  getDepartments(): Promise<Department[]> {
-    console.log('Fetching all departments');
-    return this.departmentService.findAll();
+  getDepartments(
+    @Args('page', { type: () => Int }) page: number,
+    @Args('limit', { type: () => Int }) limit: number,
+  ): Promise<Department[]> {
+    console.log(`Fetching departments - Page: ${page}, Limit: ${limit}`);
+    return this.departmentService.findAll({ page, limit });
   }
 
   @Mutation(() => Department)
