@@ -15,6 +15,8 @@ export default function DepartmentsPage() {
     useEffect(() => {
       console.log('Error:', error);
       if (error?.graphQLErrors[0]?.message === 'Unauthorized') {
+        alert('Please login to access this page');
+        localStorage.removeItem('token');
         router.push('/auth/login');
       }
       if(data?.getDepartments.length === 0) {
@@ -28,25 +30,42 @@ export default function DepartmentsPage() {
 
 
   return (
-    <div className="p-4 m-auto">
-      <div className='flex justify-between items-center mb-4'>
-      <h2 className="text-xl font-bold mb-4">Departments</h2>
-      <button className='bg-gray-400 px-4 py-2 rounded text-white cursor-pointer'
-      onClick={() => router.push('/departments/create')}
-      >Create Department</button>
-
-      </div>
-      <h1>Click on any department to update</h1>
-      {data && data.getDepartments.length && <DepartmentTree departments={data?.getDepartments} />}
-      <div className="mt-4 space-x-2">
-        <button onClick={() => setPage((p) => Math.max(p - 1, 1))} className="bg-gray-200 px-3 py-1 rounded">
-          Prev
-        </button>
-        <button onClick={() => setPage((p) => p + 1)} className="bg-gray-200 px-3 py-1 rounded">
-          Next
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">Departments</h2>
+        <button
+          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg transition"
+          onClick={() => router.push('/departments/create')}
+        >
+          + Create Department
         </button>
       </div>
-      
+  
+      <p className="text-gray-600 mb-4">Click on any department to update it.</p>
+  
+      {data?.getDepartments.length ? (
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+          <DepartmentTree departments={data.getDepartments} />
+        </div>
+      ) : (
+        <p className="text-gray-500 italic">No departments found.</p>
+      )}
+  
+      <div className="flex justify-center mt-6 gap-4">
+        <button
+          onClick={() => setPage((p) => Math.max(p - 1, 1))}
+          className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
+        >
+          ← Prev
+        </button>
+        <button
+          onClick={() => setPage((p) => p + 1)}
+          className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
+        >
+          Next →
+        </button>
+      </div>
     </div>
   );
+  
 }
