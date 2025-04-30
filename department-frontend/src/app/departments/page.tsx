@@ -10,13 +10,10 @@ export default function DepartmentsPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const { data, loading, error } = useQuery(GET_DEPARTMENTS);
-    console.log(page, loading, error, data);
 
     useEffect(() => {
-      console.log('Error:', error);
       if (error?.graphQLErrors[0]?.message === 'Unauthorized') {
         alert('Please login to access this page');
-        localStorage.removeItem('token');
         router.push('/auth/login');
       }
       if(data?.getDepartments.length === 0) {

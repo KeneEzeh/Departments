@@ -11,7 +11,6 @@ export default function DepartmentForm({mode,id}: myProps) {
   const [name, setName] = useState('');
   const [subs, setSubs] = useState<string[]>([]);
   const [mutate] = useMutation( mode === 'create' ? CREATE_DEPARTMENT : UPDATE_DEPARTMENT);
-  console.log(mode,id);
 
   const handleAddSub = () => setSubs([...subs, '']);
   const handleSubChange = (value: string, index: number) => {
@@ -27,7 +26,6 @@ export default function DepartmentForm({mode,id}: myProps) {
       subDepartments: subs.filter(Boolean).map((s) => ({ name: s })),
     };
     await mutate({ variables: mode === 'create' ? { input } : { id, input } });
-    console.log('Submitting form', input);
     alert(`Department ${mode === 'create' ? "created" : 'updated'}created successfully`);
     setName('');
     setSubs([]);
@@ -35,6 +33,7 @@ export default function DepartmentForm({mode,id}: myProps) {
   };
 
   return (
+    <>
     <form onSubmit={handleSubmit} className="space-y-4">
       <input className="border p-2 rounded w-full" value={name} onChange={(e) => setName(e.target.value)} placeholder="Department name" />
       {mode === 'update' && <input className="border p-2 rounded w-full cursor-not-allowed" value={id} readOnly  placeholder="Department Id" />}
@@ -56,5 +55,6 @@ export default function DepartmentForm({mode,id}: myProps) {
         {mode === 'create' ? 'Create Department' : 'Update Department'}
       </button>
     </form>
+    </>
   );
 }

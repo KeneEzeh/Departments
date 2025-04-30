@@ -12,7 +12,6 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
     const graphql_context = GqlExecutionContext.create(context).getContext();
     const req = graphql_context.req;
     const token = this.extractTokenFromHeader(req);
-    console.log('Token:', token);
     if (!token) {
       throw new UnauthorizedException('Invalid token');
     }

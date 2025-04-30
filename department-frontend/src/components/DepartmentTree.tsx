@@ -16,7 +16,6 @@ export default function DepartmentTree({ departments }: { departments: Departmen
   const handleRowClick = (id: string) => {
     router.push(`/departments/update/${id}`); // change path as needed
   };
-  console.log(departments);
   return (
     <div className="max-w-5xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">All Departments</h2>
