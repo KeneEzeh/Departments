@@ -63,30 +63,35 @@ export class DepartmentService {
   }
 
   async update(id: string, input: UpdateDepartmentInput): Promise<Department> {
-    const department = await this.departmentRepo.findOne({
-      where: { id },
-      relations: ['subDepartments'],
-    });
-    if (!department) throw new Error('Department not found');
+    try {
+      const department = await this.departmentRepo.findOne({
+        where: { id },
+        relations: ['subDepartments'],
+      });
+      if (!department) throw new Error('Department not found');
 
-    department.name = input.name ?? department.name;
+      department.name = input.name ?? department.name;
 
-    if (input.subDepartments?.length) {
-      for (const sub of input.subDepartments) {
-        const existingSubDepartment = department.subDepartments.find(
-          (subDep) => subDep.name === sub.name,
-        );
-        if (!existingSubDepartment) {
-          const newSubDepartment = await this.departmentRepo.save({
-            name: sub.name,
-            parent: department,
-          });
-          department.subDepartments.push(newSubDepartment);
+      if (input.subDepartments?.length) {
+        for (const sub of input.subDepartments) {
+          const existingSubDepartment = department.subDepartments.find(
+            (subDep) => subDep.name === sub.name,
+          );
+          if (!existingSubDepartment) {
+            const newSubDepartment = await this.departmentRepo.save({
+              name: sub.name,
+              parent: department,
+            });
+            department.subDepartments.push(newSubDepartment);
+          }
         }
       }
-    }
 
-    return this.departmentRepo.save(department);
+      return this.departmentRepo.save(department);
+    } catch (error) {
+      console.error('Error during update:', error);
+      throw new InternalServerErrorException('Error updating department');
+    }
   }
 
   async remove(id: number): Promise<boolean> {

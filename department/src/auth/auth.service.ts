@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -21,47 +22,65 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, userId: string): Promise<any> {
-    console.log(email, userId);
-    const user = await this.usersService.findUserByEmail(email);
-    if (!user) {
-      throw new UnauthorizedException('User does not have access to app.');
-    }
+    try {
+      const user = await this.usersService.findUserByEmail(email);
+      if (!user) {
+        throw new UnauthorizedException('User does not have access to app.');
+      }
 
-    if (user && user.id === userId) {
-      // const { password, ...result } = user;
-      return user;
+      if (user && user.id === userId) {
+        // const { password, ...result } = user;
+        return user;
+      }
+      return null;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Error message:', error.message);
+      } else {
+        console.error('Unknown error:', error);
+      }
+      console.log(error);
+      throw new InternalServerErrorException('Error validating user');
     }
-    return null;
   }
 
   async signup(input: SignupInput): Promise<User> {
-    const existingUser = await this.userRepo.findOne({
-      where: { email: input.email },
-    });
-    if (existingUser) {
-      throw new BadRequestException('User with this email already exists');
+    try {
+      const existingUser = await this.userRepo.findOne({
+        where: { email: input.email },
+      });
+      if (existingUser) {
+        throw new BadRequestException('User with this email already exists');
+      }
+      const hashedPassword = await bcrypt.hash(input.password, 10);
+      const user = this.userRepo.create({ ...input, password: hashedPassword });
+      return this.userRepo.save(user);
+    } catch (error) {
+      console.error('Error during signup:', error);
+      throw new InternalServerErrorException('Signup failed');
     }
-    const hashedPassword = await bcrypt.hash(input.password, 10);
-    const user = this.userRepo.create({ ...input, password: hashedPassword });
-    return this.userRepo.save(user);
   }
 
   async login(email: string, password: string) {
-    const user = await this.usersService.findUserByEmail(email);
-    console.log(email, password);
+    try {
+      const user = await this.usersService.findUserByEmail(email);
 
-    if (!user) {
-      throw new UnauthorizedException('Invalid email.');
-    }
+      if (!user) {
+        throw new UnauthorizedException('Invalid email.');
+      }
 
-    // Check if the password is correct
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid password.');
+      // Check if the password is correct
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Invalid password.');
+      }
+      const payload = { email: user.email, sub: user.id };
+      return {
+        access_token: this.jwtService.sign(payload),
+      };
+    } catch (error) {
+      console.error('Error during login:', error);
+      throw new InternalServerErrorException('Login failed');
     }
-    const payload = { email: user.email, sub: user.id };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
   }
 }

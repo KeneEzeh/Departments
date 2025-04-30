@@ -19,7 +19,7 @@ export default function AuthForm({ mode }: Props) {
       const res = await auth({ variables: mode === 'login' ? { email, password } : { email, password, username } });
       if(mode === 'login') {
         localStorage.setItem('token', res.data.login.access_token);
-        console.log('Submitting form', res.data.login.access_token);
+        console.log('Login successful:', res.data.login.access_token);
         router.push('/departments');
       } else {
         router.push('/auth/login');

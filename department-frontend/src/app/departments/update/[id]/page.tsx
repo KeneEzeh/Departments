@@ -1,7 +1,12 @@
 'use client';
 import DepartmentForm from '@/components/DepartmentForm';
 
-export default function UpdateDepartmentPage({params}: {params: {id: string}}) {
+type PageProps = {
+  params: {
+    id: string;
+  };
+};
+export default function UpdateDepartmentPage({params}: PageProps) {
   const { id } = params;
   // const { id } = useParams();
   console.log(id);

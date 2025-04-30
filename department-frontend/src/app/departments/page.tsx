@@ -2,17 +2,28 @@
 import { useQuery } from '@apollo/client';
 import { GET_DEPARTMENTS } from '@/graphql/queries';
 import DepartmentTree from '@/components/DepartmentTree';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LoadingOverlay } from '../../components/Loader';
 import { useRouter } from 'next/navigation';
 
 export default function DepartmentsPage() {
   const router = useRouter();
   const [page, setPage] = useState(1);
-  const { data, loading } = useQuery(GET_DEPARTMENTS);
-    console.log(data,page);
+  const { data, loading, error } = useQuery(GET_DEPARTMENTS);
+    console.log(page, loading, error, data);
+
+    useEffect(() => {
+      console.log('Error:', error);
+      if (error?.graphQLErrors[0]?.message === 'Unauthorized') {
+        router.push('/auth/login');
+      }
+      if(data?.getDepartments.length === 0) {
+        alert('No departments found');
+      }
+    },[error, data]); 
 
   if (loading) return <LoadingOverlay />;
+
 
 
 
@@ -26,7 +37,7 @@ export default function DepartmentsPage() {
 
       </div>
       <h1>Click on any of the columns to update</h1>
-      {data.getDepartments.length && <DepartmentTree departments={data?.getDepartments} />}
+      {data && data.getDepartments.length && <DepartmentTree departments={data?.getDepartments} />}
       <div className="mt-4 space-x-2">
         <button onClick={() => setPage((p) => Math.max(p - 1, 1))} className="bg-gray-200 px-3 py-1 rounded">
           Prev

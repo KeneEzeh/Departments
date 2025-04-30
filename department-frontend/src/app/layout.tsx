@@ -1,4 +1,3 @@
-// app/layout.tsx
 import './globals.css';
 import { ReactNode } from 'react';
 import { ApolloWrapper } from '@/lib/apollo-wrapper';

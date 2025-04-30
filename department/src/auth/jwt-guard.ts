@@ -15,7 +15,6 @@ export class GqlAuthGuard extends AuthGuard('jwt') {
     if (!token) {
       throw new UnauthorizedException('Invalid token');
     }
-    console.log('Getting request from context:');
     return req;
   }
 
