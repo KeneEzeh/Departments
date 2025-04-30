@@ -58,16 +58,8 @@ export class DepartmentService {
     }
   }
 
-  async findAll({
-    page,
-    limit,
-  }: {
-    page: number;
-    limit: number;
-  }): Promise<Department[]> {
+  async findAll(): Promise<Department[]> {
     return this.departmentRepo.find({
-      skip: (page - 1) * limit,
-      take: limit,
       relations: ['subDepartments', 'parent'],
     });
   }
