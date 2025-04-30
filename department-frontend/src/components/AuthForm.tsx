@@ -16,8 +16,8 @@ export default function AuthForm({ mode }: Props) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      console.log('Submitting form', { email, password, username });
       const res = await auth({ variables: mode === 'login' ? { email, password } : { email, password, username } });
-      console.log('Submitting form', { email, password });
       if(mode === 'login') {
         localStorage.setItem('token', res.data.login.access_token);
         router.push('/departments');
