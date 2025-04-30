@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_DEPARTMENT, UPDATE_DEPARTMENT } from '@/graphql/mutations';
 import { useRouter } from 'next/navigation';
+import { ParamValue } from 'next/dist/server/request/params';
 
-type Props = { mode: 'create' | 'update', id?: string };
-export default function DepartmentForm({mode,id}: Props) {
+type myProps = { mode: 'create' | 'update', id?: ParamValue };
+export default function DepartmentForm({mode,id}: myProps) {
   const router = useRouter();
   const [name, setName] = useState('');
   const [subs, setSubs] = useState<string[]>([]);

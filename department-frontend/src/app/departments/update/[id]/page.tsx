@@ -1,9 +1,10 @@
 'use client';
 import DepartmentForm from '@/components/DepartmentForm';
+import { useParams } from 'next/navigation';
 
-export default function UpdateDepartmentPage({ params }: { params: { id: string } }) {
-  const { id } = params;
-  // const { id } = useParams();
+export default function UpdateDepartmentPage() {
+  // const { id } = params;
+  const { id } = useParams();
   console.log(id);
   return (
     <div className="p-6">
